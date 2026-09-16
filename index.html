@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام تدبير مصلحة تصحيح الإمضاء والحالة المدنية – الملحقة الإدارية الثالثة عشر بوجدة</title>
+    <!-- Tailwind CSS for modern layout & FontAwesome for icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        admin: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            dark: '#0f172a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .print-container { width: 100% !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; }
+            @page { size: A4; margin: 1cm; }
+        }
+        body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Top Header -->
+    <header class="bg-slate-900 text-white shadow-md no-print">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-2">
+            <div class="flex items-center gap-3">
+                <div class="bg-emerald-600 p-2.5 rounded-lg text-white">
+                    <i class="fa-solid fa-landmark text-xl"></i>
+                </div>
+                <div>
+                    <h1 id="headerInstName" class="text-lg font-bold">الملحقة الإدارية الثالثة عشر بوجدة</h1>
+                    <p id="headerDeptName" class="text-xs text-slate-400">نظام تدبير مصلحة تصحيح الإمضاء والحالة المدنية</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 text-sm">
+                <span class="bg-slate-800 px-3 py-1.5 rounded-md border border-slate-700 flex items-center gap-2">
+                    <i class="fa-regular fa-calendar-days text-emerald-400"></i>
+                    <span id="currentDateDisplay">--/--/----</span>
+                </span>
+                <button onclick="openModal('backupModal')" class="bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 rounded-md transition flex items-center gap-1.5 text-xs font-semibold">
+                    <i class="fa-solid fa-database"></i> النسخ الاحتياطي
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="bg-slate-800 text-slate-200 shadow no-print sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-2 flex overflow-x-auto py-2 gap-1 no-scrollbar">
+            <button onclick="switchTab('dashboard')" class="tab-btn active px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap bg-emerald-600 text-white transition flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> لوحة التحكم</button>
+            <button onclick="switchTab('signatures')" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap hover:bg-slate-700 transition flex items-center gap-2"><i class="fa-solid fa-signature"></i> تصحيح الإمضاء</button>
+            <button onclick="switchTab('civilStatus')" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap hover:bg-slate-700 transition flex items-center gap-2"><i class="fa-solid fa-book-journal-whills"></i> الحالة المدنية</button>
+            <button onclick="switchTab('certificates')" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap hover:bg-slate-700 transition flex items-center gap-2"><i class="fa-solid fa-file-lines"></i> الشواهد الإدارية</button>
+            <button onclick="switchTab('appointments')" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap hover:bg-slate-700 transition flex items-center gap-2"><i class="fa-solid fa-clock"></i> المواعيد والتنبيهات</button>
+            <button onclick="switchTab('correspondence')" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap hover:bg-slate-700 transition flex items-center gap-2"><i class="fa-solid fa-envelope"></i> المراسلات</button>
+            <button onclick="switchTab('archive')" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap hover:bg-slate-700 transition flex items-center gap-2"><i class="fa-solid fa-box-archive"></i> الأرشيف</button>
+            <button onclick="switchTab('unifiedSearch')" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap hover:bg-slate-700 transition flex items-center gap-2"><i class="fa-solid fa-magnifying-glass"></i> البحث الموحد</button>
+            <button onclick="switchTab('reports')" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap hover:bg-slate-700 transition flex items-center gap-2"><i class="fa-solid fa-print"></i> التقارير والطباعة</button>
+            <button onclick="switchTab('employees')" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap hover:bg-slate-700 transition flex items-center gap-2"><i class="fa-solid fa-users"></i> الموظفون</button>
+            <button onclick="switchTab('settings')" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap hover:bg-slate-700 transition flex items-center gap-2"><i class="fa-solid fa-gear"></i> الإعدادات</button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- 1. DASHBOARD TAB -->
+        <section id="tab-dashboard" class="tab-content space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">لوحة القيادة والمؤشرات اليومية</h2>
+                    <p class="text-sm text-slate-500">نظرة عامة وشاملة لأنشطة المصلحة الإدارية</p>
+                </div>
+                <div class="flex gap-2 w-full md:w-auto">
+                    <button onclick="openAddModal('signatures')" class="flex-1 md:flex-none bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> تصحيح إمضاء
+                    </button>
+                    <button onclick="openAddModal('civilStatus')" class="flex-1 md:flex-none bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> حالة مدنية
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">تصحيح الإمضاء (اليوم)</p>
+                        <h3 id="statSignaturesToday" class="text-2xl font-bold text-slate-900 mt-1">0</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-signature"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">الحالة المدنية (اليوم)</p>
+                        <h3 id="statCivilToday" class="text-2xl font-bold text-slate-900 mt-1">0</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-book-journal-whills"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">الشواهد الإدارية (اليوم)</p>
+                        <h3 id="statCertsToday" class="text-2xl font-bold text-slate-900 mt-1">0</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">إجمالي العمليات (الشهر)</p>
+                        <h3 id="statMonthTotal" class="text-2xl font-bold text-slate-900 mt-1">0</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secondary Metrics -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
+                    <div>
+                        <span class="text-sm text-slate-500 font-medium">ملفات قيد المعالجة</span>
+                        <h4 id="statPendingCount" class="text-xl font-bold text-amber-600 mt-0.5">0</h4>
+                    </div>
+                    <i class="fa-solid fa-clock-rotate-left text-2xl text-amber-400"></i>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
+                    <div>
+                        <span class="text-sm text-slate-500 font-medium">ملفات منجزة</span>
+                        <h4 id="statCompletedCount" class="text-xl font-bold text-emerald-600 mt-0.5">0</h4>
+                    </div>
+                    <i class="fa-solid fa-circle-check text-2xl text-emerald-400"></i>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
+                    <div>
+                        <span class="text-sm text-slate-500 font-medium">مجموع المواطنين المخدومين</span>
+                        <h4 id="statCitizensCount" class="text-xl font-bold text-indigo-600 mt-0.5">0</h4>
+                    </div>
+                    <i class="fa-solid fa-users text-2xl text-indigo-400"></i>
+                </div>
+            </div>
+
+            <!-- Recent Operations Table -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-4 border-b border-slate-200 flex justify-between items-center">
+                    <h3 class="font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-list-check text-emerald-600"></i> عمليات اليوم الأخيرة</h3>
+                    <button onclick="switchTab('signatures')" class="text-xs text-emerald-600 font-semibold hover:underline">عرض الكل</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-slate-50 text-slate-700 uppercase text-xs border-b border-slate-200">
+                            <tr>
+                                <th class="p-3">رقم العملية</th>
+                                <th class="p-3">الوقت</th>
+                                <th class="p-3">الاسم الكامل</th>
+                                <th class="p-3">نوع الخدمة / الوثيقة</th>
+                                <th class="p-3">الموظف</th>
+                                <th class="p-3">الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboardRecentBody" class="divide-y divide-slate-100">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. SIGNATURES TAB -->
+        <section id="tab-signatures" class="tab-content hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">قسم تصحيح الإمضاء ✍️</h2>
+                    <p class="text-sm text-slate-500">تسجيل ومتابعة عمليات تصحيح الإمضاء والمطابقة</p>
+                </div>
+                <div class="flex gap-2 w-full md:w-auto">
+                    <button onclick="openAddModal('signatures')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> إضافة عملية جديدة
+                    </button>
+                    <button onclick="printDailySignatures()" class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition flex items-center gap-2">
+                        <i class="fa-solid fa-print"></i> السجل اليومي (PDF/طباعة)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters & Search -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                <input type="text" id="sigSearchText" oninput="renderSignaturesTable()" placeholder="بحث بالاسم، CIN، أو رقم العملية..." class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-600">
+                <input type="date" id="sigSearchDate" onchange="renderSignaturesTable()" class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-600">
+                <select id="sigSearchStatus" onchange="renderSignaturesTable()" class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-600">
+                    <option value="">جميع الحالات</option>
+                    <option value="منجزة">منجزة</option>
+                    <option value="ملغاة">ملغاة</option>
+                    <option value="تحتاج مراجعة">تحتاج مراجعة</option>
+                </select>
+                <button onclick="resetSigFilters()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-4 py-2 rounded-lg text-sm transition">إعادة ضبط البحث</button>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-slate-50 text-slate-700 uppercase text-xs border-b border-slate-200">
+                            <tr>
+                                <th class="p-3">رقم</th>
+                                <th class="p-3">التاريخ والوقت</th>
+                                <th class="p-3">الاسم الكامل</th>
+                                <th class="p-3">رقم CIN</th>
+                                <th class="p-3">نوع الوثيقة</th>
+                                <th class="p-3">الإمضاءات</th>
+                                <th class="p-3">الموظف</th>
+                                <th class="p-3">الحالة</th>
+                                <th class="p-3 text-center">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="signaturesTableBody" class="divide-y divide-slate-100">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. CIVIL STATUS TAB -->
+        <section id="tab-civilStatus" class="tab-content hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">قسم الحالة المدنية 📜</h2>
+                    <p class="text-sm text-slate-500">تسجيل وتتبع الرسوم والوثائق الخاصة بالحالة المدنية</p>
+                </div>
+                <button onclick="openAddModal('civilStatus')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> طلب رسم / شهادة جديدة
+                </button>
+            </div>
+
+            <!-- Search & Filters -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                <input type="text" id="csSearchText" oninput="renderCivilTable()" placeholder="بحث بالاسم، رقم الرسم، أو CIN..." class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-600">
+                <select id="csSearchStatus" onchange="renderCivilTable()" class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-600">
+                    <option value="">جميع حالات الطلب</option>
+                    <option value="جديد">🟡 جديد</option>
+                    <option value="قيد المعالجة">🔵 قيد المعالجة</option>
+                    <option value="جاهز">🟢 جاهز</option>
+                    <option value="مسلم">⚫ مسلم</option>
+                    <option value="ملغى">🔴 ملغى</option>
+                </select>
+                <input type="text" id="csSearchYear" oninput="renderCivilTable()" placeholder="السنة..." class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-600">
+                <button onclick="resetCsFilters()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-4 py-2 rounded-lg text-sm transition">إعادة ضبط البحث</button>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-slate-50 text-slate-700 uppercase text-xs border-b border-slate-200">
+                            <tr>
+                                <th class="p-3">رقم الرسم / السنة</th>
+                                <th class="p-3">نوع الرسم</th>
+                                <th class="p-3">المعني بالأمر</th>
+                                <th class="p-3">تاريخ الازدياد</th>
+                                <th class="p-3">نوع الوثيقة المطلوبة</th>
+                                <th class="p-3">تاريخ الطلب</th>
+                                <th class="p-3">الموظف</th>
+                                <th class="p-3">الحالة</th>
+                                <th class="p-3 text-center">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="civilTableBody" class="divide-y divide-slate-100">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. CERTIFICATES TAB -->
+        <section id="tab-certificates" class="tab-content hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">قسم الشواهد الإدارية 📄</h2>
+                    <p class="text-sm text-slate-500">إدارة طلبات الشواهد الإدارية المختلفة</p>
+                </div>
+                <button onclick="openAddModal('certificates')" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> إضافة شهادة إدارية جديدة
+                </button>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <input type="text" id="certSearchText" oninput="renderCertsTable()" placeholder="بحث بالاسم، رقم الطلب أو CIN..." class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-600">
+                <select id="certSearchStatus" onchange="renderCertsTable()" class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-600">
+                    <option value="">جميع الحالات</option>
+                    <option value="جديد">جديد</option>
+                    <option value="قيد المعالجة">قيد المعالجة</option>
+                    <option value="جاهز">جاهز</option>
+                    <option value="مسلم">مسلم</option>
+                    <option value="مرفوض">مرفوض</option>
+                    <option value="ملغى">ملغى</option>
+                </select>
+                <button onclick="resetCertFilters()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-4 py-2 rounded-lg text-sm transition">إعادة ضبط</button>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-slate-50 text-slate-700 uppercase text-xs border-b border-slate-200">
+                            <tr>
+                                <th class="p-3">رقم الطلب</th>
+                                <th class="p-3">نوع الشهادة</th>
+                                <th class="p-3">الاسم الكامل</th>
+                                <th class="p-3">CIN</th>
+                                <th class="p-3">تاريخ الطلب</th>
+                                <th class="p-3">الموظف</th>
+                                <th class="p-3">الحالة</th>
+                                <th class="p-3 text-center">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="certsTableBody" class="divide-y divide-slate-100">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. APPOINTMENTS TAB -->
+        <section id="tab-appointments" class="tab-content hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">المواعيد والتنبيهات ⏰</h2>
+                    <p class="text-sm text-slate-500">تنظيم المواعيد الإدارية، تسليم الوثائق والاجتماعات</p>
+                </div>
+                <button onclick="openAddModal('appointments')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> موعد أو تنبيه جديد
+                </button>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-slate-50 text-slate-700 uppercase text-xs border-b border-slate-200">
+                            <tr>
+                                <th class="p-3">عنوان الموعد / المهمة</th>
+                                <th class="p-3">المعني بالأمر</th>
+                                <th class="p-3">رقم الهاتف</th>
+                                <th class="p-3">التاريخ والوقت</th>
+                                <th class="p-3">نوع المهمة</th>
+                                <th class="p-3">الحالة</th>
+                                <th class="p-3 text-center">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointmentsTableBody" class="divide-y divide-slate-100">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. CORRESPONDENCE TAB -->
+        <section id="tab-correspondence" class="tab-content hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">سجل المراسلات 📬</h2>
+                    <p class="text-sm text-slate-500">تدبير الواردات والصادرات والمراسلات الإدارية</p>
+                </div>
+                <button onclick="openAddModal('correspondence')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> إضافة مراسلة جديدة
+                </button>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-slate-50 text-slate-700 uppercase text-xs border-b border-slate-200">
+                            <tr>
+                                <th class="p-3">رقم المراسلة</th>
+                                <th class="p-3">التاريخ</th>
+                                <th class="p-3">الجهة المرسلة</th>
+                                <th class="p-3">الموجه إليها</th>
+                                <th class="p-3">الموضوع</th>
+                                <th class="p-3">النوع</th>
+                                <th class="p-3">الحالة</th>
+                                <th class="p-3 text-center">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="correspondenceTableBody" class="divide-y divide-slate-100">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. ARCHIVE TAB -->
+        <section id="tab-archive" class="tab-content hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">الأرشيف الإلكتروني 🗄️</h2>
+                    <p class="text-sm text-slate-500">المكتبة الإلكترونية للنصوص التنظيمية والدوريات والمستندات</p>
+                </div>
+                <button onclick="openAddModal('archive')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> أرشفة وثيقة جديدة
+                </button>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-3">
+                <input type="text" id="archiveSearchText" oninput="renderArchiveTable()" placeholder="بحث في الأرشيف بالعنوان، المصدر..." class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-600">
+                <select id="archiveSearchCat" onchange="renderArchiveTable()" class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-600">
+                    <option value="">جميع التصنيفات</option>
+                    <option value="الحالة المدنية">الحالة المدنية</option>
+                    <option value="تصحيح الإمضاء">تصحيح الإمضاء</option>
+                    <option value="الشواهد الإدارية">الشواهد الإدارية</option>
+                    <option value="المراسيم والظهائر">المراسيم والظهائر</option>
+                    <option value="الدوريات والمناشير">الدوريات والمناشير</option>
+                    <option value="وثائق أخرى">وثائق أخرى</option>
+                </select>
+                <button onclick="resetArchiveFilters()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-4 py-2 rounded-lg text-sm transition">إعادة ضبط</button>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-slate-50 text-slate-700 uppercase text-xs border-b border-slate-200">
+                            <tr>
+                                <th class="p-3">رقم الوثيقة</th>
+                                <th class="p-3">العنوان</th>
+                                <th class="p-3">التصنيف</th>
+                                <th class="p-3">التاريخ</th>
+                                <th class="p-3">المصدر</th>
+                                <th class="p-3">الملاحظات</th>
+                                <th class="p-3 text-center">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="archiveTableBody" class="divide-y divide-slate-100">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. UNIFIED SEARCH TAB -->
+        <section id="tab-unifiedSearch" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">محرك البحث الموحد المركزي 🔎</h2>
+                    <p class="text-sm text-slate-500">البحث الشامل بالاسم أو رقم البطاقة الوطنية أو رقم العملية في كافة أقسام النظام</p>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="unifiedInputQuery" placeholder="أدخل اسم المواطن، رقم البطاقة الوطنية (CIN)، أو رقم الملف..." class="flex-grow border border-slate-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-emerald-600">
+                    <button onclick="runUnifiedSearch()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-medium transition flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass"></i> بحث شامل
+                    </button>
+                </div>
+            </div>
+
+            <div id="unifiedSearchResults" class="space-y-4">
+                <!-- Injected by JS -->
+            </div>
+        </section>
+
+        <!-- 9. REPORTS & PRINT TAB -->
+        <section id="tab-reports" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4 no-print">
+                <h2 class="text-xl font-bold text-slate-900">قسم التقارير والطباعة الرسمية 🖨️</h2>
+                <p class="text-sm text-slate-500">إنشاء تقارير رسمية منظمة ومطابقة لمعايير الحجم A4 للطباعة أو التصدير بصيغة PDF</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+                    <button onclick="generateReport('daily')" class="p-4 border border-slate-200 rounded-xl hover:border-emerald-600 hover:bg-emerald-50/50 text-right transition group">
+                        <i class="fa-solid fa-file-pdf text-2xl text-red-500 mb-2"></i>
+                        <h4 class="font-bold text-slate-800 group-hover:text-emerald-700">التقرير اليومي</h4>
+                        <p class="text-xs text-slate-500 mt-1">ملخص عمليات ومداخيل اليوم الحالي</p>
+                    </button>
+                    <button onclick="generateReport('signatures')" class="p-4 border border-slate-200 rounded-xl hover:border-emerald-600 hover:bg-emerald-50/50 text-right transition group">
+                        <i class="fa-solid fa-signature text-2xl text-emerald-600 mb-2"></i>
+                        <h4 class="font-bold text-slate-800 group-hover:text-emerald-700">سجل تصحيح الإمضاء</h4>
+                        <p class="text-xs text-slate-500 mt-1">كافة عمليات تصحيح الإمضاء المسجلة</p>
+                    </button>
+                    <button onclick="generateReport('civil')" class="p-4 border border-slate-200 rounded-xl hover:border-emerald-600 hover:bg-emerald-50/50 text-right transition group">
+                        <i class="fa-solid fa-book-journal-whills text-2xl text-blue-600 mb-2"></i>
+                        <h4 class="font-bold text-slate-800 group-hover:text-emerald-700">سجل الحالة المدنية</h4>
+                        <p class="text-xs text-slate-500 mt-1">طلبات ورسوم الحالة المدنية</p>
+                    </button>
+                    <button onclick="generateReport('certificates')" class="p-4 border border-slate-200 rounded-xl hover:border-emerald-600 hover:bg-emerald-50/50 text-right transition group">
+                        <i class="fa-solid fa-file-lines text-2xl text-amber-600 mb-2"></i>
+                        <h4 class="font-bold text-slate-800 group-hover:text-emerald-700">سجل الشواهد الإدارية</h4>
+                        <p class="text-xs text-slate-500 mt-1">الشواهد والوثائق الإدارية المنجزة</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Report Preview Container -->
+            <div id="reportPreviewArea" class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 print-container hidden space-y-6">
+                <!-- Header for print -->
+                <div class="border-b border-slate-300 pb-4 flex justify-between items-start">
+                    <div>
+                        <h3 id="reportInstTitle" class="text-lg font-bold text-slate-900">المملكة المغربية • وزارة الداخلية</h3>
+                        <h4 id="reportDeptTitle" class="text-md font-semibold text-slate-800 mt-1">الملحقة الإدارية الثالثة عشر بوجدة</h4>
+                        <p id="reportServiceName" class="text-sm text-slate-600 mt-0.5">مصلحة تصحيح الإمضاء والحالة المدنية</p>
+                    </div>
+                    <div class="text-left text-xs text-slate-500">
+                        <p>تاريخ الإصدار: <span id="reportPrintDate">--/--/----</span></p>
+                        <p>المستخرج: النظام الإلكتروني المحلي</p>
+                    </div>
+                </div>
+                <div class="text-center py-2">
+                    <h2 id="reportMainTitle" class="text-xl font-bold text-slate-900 underline">عنوان التقرير</h2>
+                </div>
+                <div id="reportContentTableContainer">
+                    <!-- Dynamic Table -->
+                </div>
+                <div class="pt-12 flex justify-between items-end text-sm">
+                    <div>
+                        <p class="font-bold">توقيع المسؤول الإداري:</p>
+                        <div class="h-16"></div>
+                    </div>
+                    <div>
+                        <p class="font-bold">ختم المصالح:</p>
+                        <div class="h-16"></div>
+                    </div>
+                </div>
+                <div class="text-center no-print pt-4">
+                    <button onclick="window.print()" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition flex items-center gap-2 mx-auto">
+                        <i class="fa-solid fa-print"></i> طباعة التقرير أو حفظ PDF
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. EMPLOYEES TAB -->
+        <section id="tab-employees" class="tab-content hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">إدارة الموظفين 👥</h2>
+                    <p class="text-sm text-slate-500">قائمة الموظفين المكلفين بالعمليات الإدارية</p>
+                </div>
+                <button onclick="openAddModal('employees')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> إضافة موظف جديد
+                </button>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-slate-50 text-slate-700 uppercase text-xs border-b border-slate-200">
+                            <tr>
+                                <th class="p-3">الاسم الكامل</th>
+                                <th class="p-3">الصفة / الدرجة</th>
+                                <th class="p-3">المصلحة</th>
+                                <th class="p-3">الحالة</th>
+                                <th class="p-3">ملاحظات</th>
+                                <th class="p-3 text-center">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeesTableBody" class="divide-y divide-slate-100">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. SETTINGS TAB -->
+        <section id="tab-settings" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">إعدادات النظام الإدارية ⚙️</h2>
+                    <p class="text-sm text-slate-500">تخصيص البيانات العامة للمؤسسة والملحقة</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">اسم المؤسسة / الوزارة</label>
+                        <input type="text" id="settingInstName" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-600" value="المملكة المغربية • وزارة الداخلية">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">اسم الملحقة الإدارية</label>
+                        <input type="text" id="settingDeptName" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-600" value="الملحقة الإدارية الثالثة عشر بوجدة">
+                    </div>
+                </div>
+                <div>
+                    <button onclick="saveSettings()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition">
+                        حفظ الإعدادات
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- BACKUP MODAL -->
+    <div id="backupModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-bold text-slate-900 text-lg flex items-center gap-2"><i class="fa-solid fa-database text-emerald-600"></i> النسخ الاحتياطي والاسترجاع</h3>
+                <button onclick="closeModal('backupModal')" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-4 text-sm">
+                <div>
+                    <p class="text-slate-600 mb-2">تصدير نسخة احتياطية كاملة لجميع البيانات (JSON) لحفظها على هاتفك أو حاسوبك:</p>
+                    <button onclick="exportJSONBackup()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-lg font-medium transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-download"></i> تصدير النسخة الاحتياطية (Backup)
+                    </button>
+                </div>
+                <hr>
+                <div>
+                    <p class="text-slate-600 mb-2">استرجاع البيانات من ملف نسخة احتياطية سابق:</p>
+                    <input type="file" id="importFileField" accept=".json" class="w-full border border-slate-300 rounded-lg p-2 text-xs mb-2">
+                    <button onclick="importJSONBackup()" class="w-full bg-slate-800 hover:bg-slate-900 text-white py-2.5 rounded-lg font-medium transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-upload"></i> استرجاع البيانات
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GENERAL ADD/EDIT DYNAMIC MODAL -->
+    <div id="dynamicModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 space-y-4 my-8">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 id="modalTitle" class="font-bold text-slate-900 text-lg">إضافة بيانات جديدة</h3>
+                <button onclick="closeModal('dynamicModal')" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="dynamicForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <input type="hidden" id="formEntity">
+                <input type="hidden" id="formRecordId">
+                <div id="formFieldsContainer" class="space-y-3 max-h-[60vh] overflow-y-auto px-1">
+                    <!-- Dynamic fields injected here -->
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t">
+                    <button type="button" onclick="closeModal('dynamicModal')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition">إلغاء</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition">حفظ البيانات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Core -->
+    <script>
+        // Initial LocalStorage Data Store
+        let db = JSON.parse(localStorage.getItem('admin_db_oujda13')) || {
+            settings: { instName: "المملكة المغربية • وزارة الداخلية", deptName: "الملحقة الإدارية الثالثة عشر بوجدة" },
+            signatures: [
+                { id: "SIG-1001", date: "2026-06-06", time: "09:30", name: "محمد العلوي", cin: "FA123456", docType: "عقد الإزدياد", docSubject: "التصديق على الإمضاء", count: 1, employee: "أحمد بناني", status: "منجزة", notes: "بدون ملاحظات" },
+                { id: "SIG-1002", date: "2026-06-06", time: "10:15", name: "فاطمة الزهراء الإدريسي", cin: "FB987654", docType: "التزام بالعمل", docSubject: "موافقة على شرط الشغل", count: 2, employee: "سناء العمراني", status: "منجزة", notes: "" }
+            ],
+            civilStatus: [
+                { id: "CS-501", regNum: "142", year: "2026", regType: "رسم الولادة", name: "يوسف المنصوري", birthDate: "2020-05-12", birthPlace: "وجدة", cin: "", docRequested: "نسخة كاملة", reqDate: "2026-06-06", deliverDate: "2026-06-06", employee: "أحمد بناني", status: "جاهز", notes: "" }
+            ],
+            certificates: [
+                { id: "CERT-301", certType: "شهادة السكنى", name: "عبد الله خيري", cin: "L456789", address: "شارع محمد الخامس وجدة", reqDate: "2026-06-05", compDate: "2026-06-06", deliverDate: "", employee: "سناء العمراني", status: "قيد المعالجة", notes: "في انتظار المعاينة" }
+            ],
+            appointments: [
+                { id: "APT-1", title: "تسليم شهادة السكنى", person: "عبد الله خيري", phone: "0661234567", date: "2026-06-07", time: "10:00", type: "موعد تسليم وثيقة", status: "مجدولة", notes: "" }
+            ],
+            correspondence: [
+                { id: "COR-01", number: "123/2026", date: "2026-06-04", sender: "ولاية جهة الشرق", recipient: "الملحقة الإدارية 13", subject: "تنظيم اجتماعات", type: "مراسلة واردة", recvDate: "2026-06-04", ansDate: "", status: "قيد المعالجة", notes: "" }
+            ],
+            archive: [
+                { id: "ARC-1", title: "دورية تنظيم تصحيح الإمضاء", category: "الدوريات والمناشير", docNum: "44/2025", date: "2025-01-10", source: "وزارة الداخلية", keywords: "تصحيح, إمضاء", notes: "نسخة معتمدة" }
+            ],
+            employees: [
+                { id: "EMP-1", name: "أحمد بناني", grade: "متصرف إداري", dept: "مصلحة تصحيح الإمضاء", status: "حاضر", notes: "" },
+                { id: "EMP-2", name: "سناء العمراني", grade: "كاتب إداري", dept: "الحالة المدنية", status: "حاضر", notes: "" }
+            ]
+        };
+
+        function saveDB() {
+            localStorage.setItem('admin_db_oujda13', JSON.stringify(db));
+        }
+
+        // Initialization on Load
+        window.onload = function() {
+            document.getElementById('currentDateDisplay').innerText = new Date().toLocaleDateString('ar-MA');
+            document.getElementById('headerInstName').innerText = db.settings.deptName;
+            document.getElementById('settingInstName').value = db.settings.instName;
+            document.getElementById('settingDeptName').value = db.settings.deptName;
+            renderAll();
+        };
+
+        function renderAll() {
+            renderDashboard();
+            renderSignaturesTable();
+            renderCivilTable();
+            renderCertsTable();
+            renderAppointmentsTable();
+            renderCorrespondenceTable();
+            renderArchiveTable();
+            renderEmployeesTable();
+        }
+
+        // Tab Switching
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('bg-emerald-600', 'text-white');
+                el.classList.add('hover:bg-slate-700');
+            });
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            event.currentTarget.classList.add('bg-emerald-600', 'text-white');
+            event.currentTarget.classList.remove('hover:bg-slate-700');
+        }
+
+        // Modals Management
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        // Dashboard Rendering
+        function renderDashboard() {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const sigToday = db.signatures.filter(s => s.date === todayStr).length;
+            const civilToday = db.civilStatus.filter(c => c.reqDate === todayStr).length;
+            const certToday = db.certificates.filter(ct => ct.reqDate === todayStr).length;
+
+            document.getElementById('statSignaturesToday').innerText = sigToday;
+            document.getElementById('statCivilToday').innerText = civilToday;
+            document.getElementById('statCertsToday').innerText = certToday;
+            document.getElementById('statMonthTotal').innerText = db.signatures.length + db.civilStatus.length + db.certificates.length;
+
+            const pending = db.civilStatus.filter(c => c.status === 'قيد المعالجة' || c.status === 'جديد').length +
+                            db.certificates.filter(c => c.status === 'قيد المعالجة' || c.status === 'جديد').length;
+            const completed = db.signatures.length + db.civilStatus.filter(c => c.status === 'جاهز' || c.status === 'مسلم').length;
+
+            document.getElementById('statPendingCount').innerText = pending;
+            document.getElementById('statCompletedCount').innerText = completed;
+            document.getElementById('statCitizensCount').innerText = db.signatures.length + db.civilStatus.length + db.certificates.length;
+
+            // Recent Table
+            let html = '';
+            const combined = [
+                ...db.signatures.map(s => ({ type: 'تصحيح إمضاء', id: s.id, time: s.time, name: s.name, detail: s.docType, emp: s.employee, status: s.status })),
+                ...db.civilStatus.map(c => ({ type: 'حالة مدنية', id: c.id, time: c.reqDate, name: c.name, detail: c.docRequested, emp: c.employee, status: c.status }))
+            ].slice(-5).reverse();
+
+            if(combined.length === 0) {
+                html = `<tr><td colspan="6" class="text-center p-4 text-slate-400">لا توجد عمليات مسجلة حديثاً</td></tr>`;
+            } else {
+                combined.forEach(item => {
+                    html += `
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 font-semibold text-emerald-700">${item.id}</td>
+                            <td class="p-3">${item.time}</td>
+                            <td class="p-3 font-medium">${item.name}</td>
+                            <td class="p-3"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-xs">${item.type}</span> ${item.detail}</td>
+                            <td class="p-3">${item.emp}</td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold ${item.status === 'منجزة' || item.status === 'جاهز' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${item.status}</span></td>
+                        </tr>
+                    `;
+                });
+            }
+            document.getElementById('dashboardRecentBody').innerHTML = html;
+        }
+
+        // Render Signatures Table
+        function renderSignaturesTable() {
+            const txt = document.getElementById('sigSearchText').value.toLowerCase();
+            const dateFilter = document.getElementById('sigSearchDate').value;
+            const statusFilter = document.getElementById('sigSearchStatus').value;
+
+            let filtered = db.signatures.filter(s => {
+                let matchTxt = s.name.toLowerCase().includes(txt) || s.cin.toLowerCase().includes(txt) || s.id.toLowerCase().includes(txt);
+                let matchDate = dateFilter ? s.date === dateFilter : true;
+                let matchStatus = statusFilter ? s.status === statusFilter : true;
+                return matchTxt && matchDate && matchStatus;
+            });
+
+            let html = '';
+            if(filtered.length === 0) {
+                html = `<tr><td colspan="9" class="text-center p-6 text-slate-400">لا توجد نتائج مطابقة</td></tr>`;
+            } else {
+                filtered.forEach(s => {
+                    html += `
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 font-semibold text-emerald-700">${s.id}</td>
+                            <td class="p-3">${s.date} <span class="text-xs text-slate-400">${s.time}</span></td>
+                            <td class="p-3 font-medium">${s.name}</td>
+                            <td class="p-3 text-slate-600">${s.cin}</td>
+                            <td class="p-3">${s.docType}</td>
+                            <td class="p-3 text-center">${s.count}</td>
+                            <td class="p-3">${s.employee}</td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">${s.status}</span></td>
+                            <td class="p-3 text-center space-x-1 space-x-reverse">
+                                <button onclick="editRecord('signatures', '${s.id}')" class="text-blue-600 hover:text-blue-800 p-1" title="تعديل"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button onclick="deleteRecord('signatures', '${s.id}')" class="text-red-600 hover:text-red-800 p-1" title="حذف"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            document.getElementById('signaturesTableBody').innerHTML = html;
+        }
+
+        function resetSigFilters() {
+            document.getElementById('sigSearchText').value = '';
+            document.getElementById('sigSearchDate').value = '';
+            document.getElementById('sigSearchStatus').value = '';
+            renderSignaturesTable();
+        }
+
+        // Render Civil Status Table
+        function renderCivilTable() {
+            const txt = document.getElementById('csSearchText').value.toLowerCase();
+            const status = document.getElementById('csSearchStatus').value;
+            const year = document.getElementById('csSearchYear').value;
+
+            let filtered = db.civilStatus.filter(c => {
+                let matchTxt = c.name.toLowerCase().includes(txt) || c.regNum.includes(txt) || c.cin.toLowerCase().includes(txt);
+                let matchStatus = status ? c.status === status : true;
+                let matchYear = year ? c.year === year : true;
+                return matchTxt && matchStatus && matchYear;
+            });
+
+            let html = '';
+            if(filtered.length === 0) {
+                html = `<tr><td colspan="9" class="text-center p-6 text-slate-400">لا توجد نتائج مطابقة</td></tr>`;
+            } else {
+                filtered.forEach(c => {
+                    html += `
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 font-semibold text-blue-700">${c.regNum} / ${c.year}</td>
+                            <td class="p-3">${c.regType}</td>
+                            <td class="p-3 font-medium">${c.name}</td>
+                            <td class="p-3">${c.birthDate}</td>
+                            <td class="p-3">${c.docRequested}</td>
+                            <td class="p-3">${c.reqDate}</td>
+                            <td class="p-3">${c.employee}</td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">${c.status}</span></td>
+                            <td class="p-3 text-center space-x-1 space-x-reverse">
+                                <button onclick="editRecord('civilStatus', '${c.id}')" class="text-blue-600 hover:text-blue-800 p-1" title="تعديل"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button onclick="deleteRecord('civilStatus', '${c.id}')" class="text-red-600 hover:text-red-800 p-1" title="حذف"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            document.getElementById('civilTableBody').innerHTML = html;
+        }
+
+        function resetCsFilters() {
+            document.getElementById('csSearchText').value = '';
+            document.getElementById('csSearchStatus').value = '';
+            document.getElementById('csSearchYear').value = '';
+            renderCivilTable();
+        }
+
+        // Render Certificates Table
+        function renderCertsTable() {
+            const txt = document.getElementById('certSearchText').value.toLowerCase();
+            const status = document.getElementById('certSearchStatus').value;
+
+            let filtered = db.certificates.filter(ct => {
+                let matchTxt = ct.name.toLowerCase().includes(txt) || ct.cin.toLowerCase().includes(txt) || ct.id.toLowerCase().includes(txt);
+                let matchStatus = status ? ct.status === status : true;
+                return matchTxt && matchStatus;
+            });
+
+            let html = '';
+            if(filtered.length === 0) {
+                html = `<tr><td colspan="8" class="text-center p-6 text-slate-400">لا توجد نتائج مطابقة</td></tr>`;
+            } else {
+                filtered.forEach(ct => {
+                    html += `
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 font-semibold text-amber-700">${ct.id}</td>
+                            <td class="p-3">${ct.certType}</td>
+                            <td class="p-3 font-medium">${ct.name}</td>
+                            <td class="p-3">${ct.cin}</td>
+                            <td class="p-3">${ct.reqDate}</td>
+                            <td class="p-3">${ct.employee}</td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">${ct.status}</span></td>
+                            <td class="p-3 text-center space-x-1 space-x-reverse">
+                                <button onclick="editRecord('certificates', '${ct.id}')" class="text-blue-600 hover:text-blue-800 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button onclick="deleteRecord('certificates', '${ct.id}')" class="text-red-600 hover:text-red-800 p-1"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            document.getElementById('certsTableBody').innerHTML = html;
+        }
+
+        function resetCertFilters() {
+            document.getElementById('certSearchText').value = '';
+            document.getElementById('certSearchStatus').value = '';
+            renderCertsTable();
+        }
+
+        // Render Appointments Table
+        function renderAppointmentsTable() {
+            let html = '';
+            db.appointments.forEach(a => {
+                html += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-medium">${a.title}</td>
+                        <td class="p-3">${a.person}</td>
+                        <td class="p-3">${a.phone || '-'}</td>
+                        <td class="p-3">${a.date} <span class="text-xs text-slate-400">${a.time}</span></td>
+                        <td class="p-3">${a.type}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">${a.status}</span></td>
+                        <td class="p-3 text-center space-x-1 space-x-reverse">
+                            <button onclick="editRecord('appointments', '${a.id}')" class="text-blue-600 hover:text-blue-800 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteRecord('appointments', '${a.id}')" class="text-red-600 hover:text-red-800 p-1"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('appointmentsTableBody').innerHTML = html || `<tr><td colspan="7" class="text-center p-6 text-slate-400">لا توجد مواعيد مسجلة</td></tr>`;
+        }
+
+        // Render Correspondence Table
+        function renderCorrespondenceTable() {
+            let html = '';
+            db.correspondence.forEach(cor => {
+                html += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-semibold text-emerald-700">${cor.number}</td>
+                        <td class="p-3">${cor.date}</td>
+                        <td class="p-3">${cor.sender}</td>
+                        <td class="p-3">${cor.recipient}</td>
+                        <td class="p-3 font-medium">${cor.subject}</td>
+                        <td class="p-3">${cor.type}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-800">${cor.status}</span></td>
+                        <td class="p-3 text-center space-x-1 space-x-reverse">
+                            <button onclick="editRecord('correspondence', '${cor.id}')" class="text-blue-600 hover:text-blue-800 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteRecord('correspondence', '${cor.id}')" class="text-red-600 hover:text-red-800 p-1"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('correspondenceTableBody').innerHTML = html || `<tr><td colspan="8" class="text-center p-6 text-slate-400">لا توجد مراسلات مسجلة</td></tr>`;
+        }
+
+        // Render Archive Table
+        function renderArchiveTable() {
+            const txt = document.getElementById('archiveSearchText').value.toLowerCase();
+            const cat = document.getElementById('archiveSearchCat').value;
+
+            let filtered = db.archive.filter(a => {
+                let matchTxt = a.title.toLowerCase().includes(txt) || a.source.toLowerCase().includes(txt);
+                let matchCat = cat ? a.category === cat : true;
+                return matchTxt && matchCat;
+            });
+
+            let html = '';
+            filtered.forEach(ar => {
+                html += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-semibold text-indigo-700">${ar.docNum}</td>
+                        <td class="p-3 font-medium">${ar.title}</td>
+                        <td class="p-3"><span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-xs">${ar.category}</span></td>
+                        <td class="p-3">${ar.date}</td>
+                        <td class="p-3">${ar.source}</td>
+                        <td class="p-3">${ar.notes}</td>
+                        <td class="p-3 text-center space-x-1 space-x-reverse">
+                            <button onclick="editRecord('archive', '${ar.id}')" class="text-blue-600 hover:text-blue-800 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteRecord('archive', '${ar.id}')" class="text-red-600 hover:text-red-800 p-1"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('archiveTableBody').innerHTML = html || `<tr><td colspan="7" class="text-center p-6 text-slate-400">الأرشيف فارغ أو لا توجد نتائج</td></tr>`;
+        }
+
+        function resetArchiveFilters() {
+            document.getElementById('archiveSearchText').value = '';
+            document.getElementById('archiveSearchCat').value = '';
+            renderArchiveTable();
+        }
+
+        // Render Employees Table
+        function renderEmployeesTable() {
+            let html = '';
+            db.employees.forEach(e => {
+                html += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-medium">${e.name}</td>
+                        <td class="p-3">${e.grade}</td>
+                        <td class="p-3">${e.dept}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">${e.status}</span></td>
+                        <td class="p-3">${e.notes || '-'}</td>
+                        <td class="p-3 text-center space-x-1 space-x-reverse">
+                            <button onclick="editRecord('employees', '${e.id}')" class="text-blue-600 hover:text-blue-800 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteRecord('employees', '${e.id}')" class="text-red-600 hover:text-red-800 p-1"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('employeesTableBody').innerHTML = html || `<tr><td colspan="6" class="text-center p-6 text-slate-400">لا توجد بيانات موظفين مسجلة</td></tr>`;
+        }
+
+        // Unified Search Engine
+        function runUnifiedSearch() {
+            const query = document.getElementById('unifiedInputQuery').value.trim().toLowerCase();
+            const container = document.getElementById('unifiedSearchResults');
+            if(!query) {
+                container.innerHTML = `<div class="bg-white p-4 rounded-xl text-center text-slate-400">يرجى إدخال نص للبحث</div>`;
+                return;
+            }
+
+            const foundSigs = db.signatures.filter(s => s.name.toLowerCase().includes(query) || s.cin.toLowerCase().includes(query) || s.id.toLowerCase().includes(query));
+            const foundCivil = db.civilStatus.filter(c => c.name.toLowerCase().includes(query) || c.cin.toLowerCase().includes(query) || c.regNum.includes(query));
+            const foundCerts = db.certificates.filter(ct => ct.name.toLowerCase().includes(query) || ct.cin.toLowerCase().includes(query));
+
+            let html = `<h3 class="font-bold text-slate-800">نتائج البحث عن: "${query}"</h3>`;
+
+            if(foundSigs.length > 0) {
+                html += `<div class="bg-white rounded-xl p-4 shadow-sm border space-y-2"><h4 class="font-bold text-emerald-700 text-sm">تصحيح الإمضاء (${foundSigs.length})</h4>`;
+                foundSigs.forEach(s => { html += `<div class="text-xs p-2 bg-slate-50 rounded flex justify-between"><span><b>${s.id}</b> - ${s.name} (CIN: ${s.cin})</span><span>${s.date}</span></div>`; });
+                html += `</div>`;
+            }
+
+            if(foundCivil.length > 0) {
+                html += `<div class="bg-white rounded-xl p-4 shadow-sm border space-y-2"><h4 class="font-bold text-blue-700 text-sm">الحالة المدنية (${foundCivil.length})</h4>`;
+                foundCivil.forEach(c => { html += `<div class="text-xs p-2 bg-slate-50 rounded flex justify-between"><span>رسم رقم <b>${c.regNum}/${c.year}</b> - ${c.name}</span><span>${c.regType}</span></div>`; });
+                html += `</div>`;
+            }
+
+            if(foundSigs.length === 0 && foundCivil.length === 0 && foundCerts.length === 0) {
+                html += `<div class="bg-white p-6 rounded-xl text-center text-slate-500">لم يتم العثور على أي نتائج مطابقة في الأقسام.</div>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Dynamic Modal Form Builder for Add/Edit
+        function openAddModal(entity, id = null) {
+            document.getElementById('formEntity').value = entity;
+            document.getElementById('formRecordId').value = id || '';
+            const titleEl = document.getElementById('modalTitle');
+            const container = document.getElementById('formFieldsContainer');
+            let record = id ? db[entity].find(x => x.id === id) : {};
+
+            let empOptions = db.employees.map(e => `<option value="${e.name}" ${record.employee === e.name ? 'selected' : ''}>${e.name}</option>`).join('');
+
+            if(entity === 'signatures') {
+                titleEl.innerText = id ? "تعديل عملية تصحيح إمضاء" : "تسجيل عملية تصحيح إمضاء جديدة";
+                container.innerHTML = `
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل</label><input type="text" id="f_name" value="${record.name || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">رقم البطاقة الوطنية (CIN)</label><input type="text" id="f_cin" value="${record.cin || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">نوع الوثيقة</label><input type="text" id="f_docType" value="${record.docType || 'عقد إزدياد'}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">عدد الإمضاءات</label><input type="number" id="f_count" value="${record.count || 1}" min="1" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    </div>
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">موضوع الوثيقة</label><input type="text" id="f_docSubject" value="${record.docSubject || ''}" class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">الموظف المكلف</label><select id="f_employee" class="w-full border rounded-lg px-3 py-2 text-sm">${empOptions}</select></div>
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">الحالة</label><select id="f_status" class="w-full border rounded-lg px-3 py-2 text-sm"><option ${record.status === 'منجزة' ? 'selected' : ''}>منجزة</option><option ${record.status === 'ملغاة' ? 'selected' : ''}>ملغاة</option><option ${record.status === 'تحتاج مراجعة' ? 'selected' : ''}>تحتاج مراجعة</option></select></div>
+                    </div>
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">ملاحظات</label><textarea id="f_notes" class="w-full border rounded-lg px-3 py-2 text-sm">${record.notes || ''}</textarea></div>
+                `;
+            } else if(entity === 'civilStatus') {
+                titleEl.innerText = id ? "تعديل رسم / طلب حالة مدنية" : "طلب رسم أو شهادة حالة مدنية جديدة";
+                container.innerHTML = `
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">رقم الرسم</label><input type="text" id="f_regNum" value="${record.regNum || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">السنة</label><input type="text" id="f_year" value="${record.year || new Date().getFullYear()}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    </div>
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">نوع الرسم</label><input type="text" id="f_regType" value="${record.regType || 'رسم الولادة'}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل المعني</label><input type="text" id="f_name" value="${record.name || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">تاريخ الازدياد</label><input type="date" id="f_birthDate" value="${record.birthDate || ''}" class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">مكان الازدياد</label><input type="text" id="f_birthPlace" value="${record.birthPlace || 'وجدة'}" class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">نوع الوثيقة المطلوبة</label><input type="text" id="f_docRequested" value="${record.docRequested || 'نسخة كاملة'}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">حالة الطلب</label><select id="f_status" class="w-full border rounded-lg px-3 py-2 text-sm"><option ${record.status === 'جديد' ? 'selected' : ''}>جديد</option><option ${record.status === 'قيد المعالجة' ? 'selected' : ''}>قيد المعالجة</option><option ${record.status === 'جاهز' ? 'selected' : ''}>جاهز</option><option ${record.status === 'مسلم' ? 'selected' : ''}>مسلم</option><option ${record.status === 'ملغى' ? 'selected' : ''}>ملغى</option></select></div>
+                    </div>
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">الموظف المكلف</label><select id="f_employee" class="w-full border rounded-lg px-3 py-2 text-sm">${empOptions}</select></div>
+                `;
+            } else if(entity === 'certificates') {
+                titleEl.innerText = id ? "تعديل شهادة إدارية" : "إضافة شهادة إدارية جديدة";
+                container.innerHTML = `
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">نوع الشهادة</label><input type="text" id="f_certType" value="${record.certType || 'شهادة السكنى'}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل</label><input type="text" id="f_name" value="${record.name || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">رقم CIN</label><input type="text" id="f_cin" value="${record.cin || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    </div>
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">العنوان</label><input type="text" id="f_address" value="${record.address || ''}" class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">الموظف</label><select id="f_employee" class="w-full border rounded-lg px-3 py-2 text-sm">${empOptions}</select></div>
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">الحالة</label><select id="f_status" class="w-full border rounded-lg px-3 py-2 text-sm"><option>جديد</option><option>قيد المعالجة</option><option>جاهز</option><option>مسلم</option><option>مرفوض</option><option>ملغى</option></select></div>
+                    </div>
+                `;
+            } else if(entity === 'appointments') {
+                titleEl.innerText = "إضافة موعد أو تنبيه";
+                container.innerHTML = `
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">عنوان الموعد / المهمة</label><input type="text" id="f_title" value="${record.title || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">المعني بالأمر</label><input type="text" id="f_person" value="${record.person || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف</label><input type="text" id="f_phone" value="${record.phone || ''}" class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">التاريخ</label><input type="date" id="f_date" value="${record.date || new Date().toISOString().split('T')[0]}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">الساعة</label><input type="time" id="f_time" value="${record.time || '10:00'}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    </div>
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">نوع المهمة</label><input type="text" id="f_type" value="${record.type || 'موعد تسليم وثيقة'}" class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                `;
+            } else if(entity === 'correspondence') {
+                titleEl.innerText = "إضافة مراسلة جديدة";
+                container.innerHTML = `
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">رقم المراسلة</label><input type="text" id="f_number" value="${record.number || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">النوع</label><select id="f_type" class="w-full border rounded-lg px-3 py-2 text-sm"><option>مراسلة واردة</option><option>مراسلة صادرة</option></select></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">الجهة المرسلة</label><input type="text" id="f_sender" value="${record.sender || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">الجهة الموجه إليها</label><input type="text" id="f_recipient" value="${record.recipient || 'الملحقة الإدارية 13'}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    </div>
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">الموضوع</label><input type="text" id="f_subject" value="${record.subject || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                `;
+            } else if(entity === 'archive') {
+                titleEl.innerText = "أرشفة وثيقة جديدة";
+                container.innerHTML = `
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">عنوان الوثيقة</label><input type="text" id="f_title" value="${record.title || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">التصنيف</label><select id="f_category" class="w-full border rounded-lg px-3 py-2 text-sm"><option>الحالة المدنية</option><option>تصحيح الإمضاء</option><option>الشواهد الإدارية</option><option>المراسيم والظهائر</option><option>الدوريات والمناشير</option><option>وثائق أخرى</option></select></div>
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">رقم الوثيقة</label><input type="text" id="f_docNum" value="${record.docNum || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">التاريخ</label><input type="date" id="f_date" value="${record.date || new Date().toISOString().split('T')[0]}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">المصدر</label><input type="text" id="f_source" value="${record.source || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    </div>
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">ملاحظات</label><textarea id="f_notes" class="w-full border rounded-lg px-3 py-2 text-sm">${record.notes || ''}</textarea></div>
+                `;
+            } else if(entity === 'employees') {
+                titleEl.innerText = "إضافة موظف جديد";
+                container.innerHTML = `
+                    <div><label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل</label><input type="text" id="f_name" value="${record.name || ''}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">الصفة / الدرجة</label><input type="text" id="f_grade" value="${record.grade || 'كاتب إداري'}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                        <div><label class="block text-xs font-bold text-slate-700 mb-1">المصلحة</label><input type="text" id="f_dept" value="${record.dept || 'مصلحة تصحيح الإمضاء'}" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    </div>
+                `;
+            }
+            openModal('dynamicModal');
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const entity = document.getElementById('formEntity').value;
+            const recordId = document.getElementById('formRecordId').value;
+            const todayStr = new Date().toISOString().split('T')[0];
+            const timeStr = new Date().toLocaleTimeString('ar-MA', {hour: '2-digit', minute:'2-digit'});
+
+            let obj = { id: recordId || (entity.substring(0,3).toUpperCase() + '-' + Date.now().toString().slice(-4)) };
+
+            if(entity === 'signatures') {
+                obj.date = recordId ? db.signatures.find(x => x.id === recordId).date : todayStr;
+                obj.time = recordId ? db.signatures.find(x => x.id === recordId).time : timeStr;
+                obj.name = document.getElementById('f_name').value;
+                obj.cin = document.getElementById('f_cin').value;
+                obj.docType = document.getElementById('f_docType').value;
+                obj.count = parseInt(document.getElementById('f_count').value);
+                obj.docSubject = document.getElementById('f_docSubject').value;
+                obj.employee = document.getElementById('f_employee').value;
+                obj.status = document.getElementById('f_status').value;
+                obj.notes = document.getElementById('f_notes').value;
+            } else if(entity === 'civilStatus') {
+                obj.regNum = document.getElementById('f_regNum').value;
+                obj.year = document.getElementById('f_year').value;
+                obj.regType = document.getElementById('f_regType').value;
+                obj.name = document.getElementById('f_name').value;
+                obj.birthDate = document.getElementById('f_birthDate').value;
+                obj.birthPlace = document.getElementById('f_birthPlace').value;
+                obj.docRequested = document.getElementById('f_docRequested').value;
+                obj.reqDate = recordId ? db.civilStatus.find(x => x.id === recordId).reqDate : todayStr;
+                obj.employee = document.getElementById('f_employee').value;
+                obj.status = document.getElementById('f_status').value;
+            } else if(entity === 'certificates') {
+                obj.certType = document.getElementById('f_certType').value;
+                obj.name = document.getElementById('f_name').value;
+                obj.cin = document.getElementById('f_cin').value;
+                obj.address = document.getElementById('f_address').value;
+                obj.reqDate = recordId ? db.certificates.find(x => x.id === recordId).reqDate : todayStr;
+                obj.employee = document.getElementById('f_employee').value;
+                obj.status = document.getElementById('f_status').value;
+            } else if(entity === 'appointments') {
+                obj.title = document.getElementById('f_title').value;
+                obj.person = document.getElementById('f_person').value;
+                obj.phone = document.getElementById('f_phone').value;
+                obj.date = document.getElementById('f_date').value;
+                obj.time = document.getElementById('f_time').value;
+                obj.type = document.getElementById('f_type').value;
+                obj.status = "مجدولة";
+            } else if(entity === 'correspondence') {
+                obj.number = document.getElementById('f_number').value;
+                obj.date = recordId ? db.correspondence.find(x => x.id === recordId).date : todayStr;
+                obj.sender = document.getElementById('f_sender').value;
+                obj.recipient = document.getElementById('f_recipient').value;
+                obj.subject = document.getElementById('f_subject').value;
+                obj.type = document.getElementById('f_type').value;
+                obj.status = "قيد المعالجة";
+            } else if(entity === 'archive') {
+                obj.title = document.getElementById('f_title').value;
+                obj.category = document.getElementById('f_category').value;
+                obj.docNum = document.getElementById('f_docNum').value;
+                obj.date = document.getElementById('f_date').value;
+                obj.source = document.getElementById('f_source').value;
+                obj.notes = document.getElementById('f_notes').value;
+            } else if(entity === 'employees') {
+                obj.name = document.getElementById('f_name').value;
+                obj.grade = document.getElementById('f_grade').value;
+                obj.dept = document.getElementById('f_dept').value;
+                obj.status = "حاضر";
+            }
+
+            if(recordId) {
+                let idx = db[entity].findIndex(x => x.id === recordId);
+                if(idx !== -1) db[entity][idx] = obj;
+            } else {
+                db[entity].push(obj);
+            }
+
+            saveDB();
+            renderAll();
+            closeModal('dynamicModal');
+        }
+
+        function editRecord(entity, id) {
+            openAddModal(entity, id);
+        }
+
+        function deleteRecord(entity, id) {
+            if(confirm("هل أنت متأكد من رغبتك في حذف هذا السجل؟ لا يمكن التراجع عن هذا الإجراء.")) {
+                db[entity] = db[entity].filter(x => x.id !== id);
+                saveDB();
+                renderAll();
+            }
+        }
+
+        // Settings Save
+        function saveSettings() {
+            db.settings.instName = document.getElementById('settingInstName').value;
+            db.settings.deptName = document.getElementById('settingDeptName').value;
+            saveDB();
+            document.getElementById('headerInstName').innerText = db.settings.deptName;
+            alert("تم حفظ الإعدادات بنجاح.");
+        }
+
+        // Backup / Restore JSON
+        function exportJSONBackup() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `Backup_Oujda13_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importJSONBackup() {
+            const fileInput = document.getElementById('importFileField');
+            if(fileInput.files.length === 0) {
+                alert("يرجى اختيار ملف النسخة الاحتياطية (JSON) أولاً.");
+                return;
+            }
+            if(confirm("تحذير: استرجاع البيانات سيقوم بتحديث قاعدة البيانات الحالية. هل تريد المتابعة؟")) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        db = JSON.parse(e.target.result);
+                        saveDB();
+                        renderAll();
+                        closeModal('backupModal');
+                        alert("تم استرجاع البيانات بنجاح.");
+                    } catch(err) {
+                        alert("ملف غير صالح أو التنسيق غير متوافق.");
+                    }
+                };
+                reader.readAsText(fileInput.files[0]);
+            }
+        }
+
+        // Reports Generation & Printing
+        function generateReport(type) {
+            document.getElementById('reportPreviewArea').classList.remove('hidden');
+            document.getElementById('reportInstTitle').innerText = db.settings.instName;
+            document.getElementById('reportDeptTitle').innerText = db.settings.deptName;
+            document.getElementById('reportPrintDate').innerText = new Date().toLocaleDateString('ar-MA');
+
+            let title = "";
+            let tableHTML = "";
+
+            if(type === 'daily') {
+                title = "تقرير العمليات اليومي للمصلحة";
+                const todayStr = new Date().toISOString().split('T')[0];
+                const todaySigs = db.signatures.filter(s => s.date === todayStr);
+                tableHTML = `
+                    <p class="font-bold mb-2">تاريخ التقرير: ${todayStr}</p>
+                    <table class="w-full text-right text-sm border">
+                        <thead class="bg-slate-100 border-b"><tr><th class="p-2 border">الرقم</th><th class="p-2 border">الوقت</th><th class="p-2 border">الاسم</th><th class="p-2 border">الوثيقة</th><th class="p-2 border">الموظف</th></tr></thead>
+                        <tbody>
+                            ${todaySigs.map(s => `<tr><td class="p-2 border">${s.id}</td><td class="p-2 border">${s.time}</td><td class="p-2 border">${s.name}</td><td class="p-2 border">${s.docType}</td><td class="p-2 border">${s.employee}</td></tr>`).join('') || '<tr><td colspan="5" class="p-4 text-center">لا توجد عمليات مسجلة اليوم</td></tr>'}
+                        </tbody>
+                    </table>
+                `;
+            } else if(type === 'signatures') {
+                title = "السجل العام لتصحيح الإمضاء";
+                tableHTML = `
+                    <table class="w-full text-right text-sm border">
+                        <thead class="bg-slate-100 border-b"><tr><th class="p-2 border">الرقم</th><th class="p-2 border">التاريخ</th><th class="p-2 border">الاسم</th><th class="p-2 border">CIN</th><th class="p-2 border">الوثيقة</th><th class="p-2 border">الموظف</th></tr></thead>
+                        <tbody>
+                            ${db.signatures.map(s => `<tr><td class="p-2 border">${s.id}</td><td class="p-2 border">${s.date}</td><td class="p-2 border">${s.name}</td><td class="p-2 border">${s.cin}</td><td class="p-2 border">${s.docType}</td><td class="p-2 border">${s.employee}</td></tr>`).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } else if(type === 'civil') {
+                title = "سجل طلبات ورسوم الحالة المدنية";
+                tableHTML = `
+                    <table class="w-full text-right text-sm border">
+                        <thead class="bg-slate-100 border-b"><tr><th class="p-2 border">رسم / سنة</th><th class="p-2 border">نوع الرسم</th><th class="p-2 border">المعني</th><th class="p-2 border">الوثيقة</th><th class="p-2 border">الحالة</th></tr></thead>
+                        <tbody>
+                            ${db.civilStatus.map(c => `<tr><td class="p-2 border">${c.regNum} / ${c.year}</td><td class="p-2 border">${c.regType}</td><td class="p-2 border">${c.name}</td><td class="p-2 border">${c.docRequested}</td><td class="p-2 border">${c.status}</td></tr>`).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } else if(type === 'certificates') {
+                title = "سجل الشواهد الإدارية";
+                tableHTML = `
+                    <table class="w-full text-right text-sm border">
+                        <thead class="bg-slate-100 border-b"><tr><th class="p-2 border">رقم الطلب</th><th class="p-2 border">نوع الشهادة</th><th class="p-2 border">الاسم</th><th class="p-2 border">CIN</th><th class="p-2 border">الحالة</th></tr></thead>
+                        <tbody>
+                            ${db.certificates.map(ct => `<tr><td class="p-2 border">${ct.id}</td><td class="p-2 border">${ct.certType}</td><td class="p-2 border">${ct.name}</td><td class="p-2 border">${ct.cin}</td><td class="p-2 border">${ct.status}</td></tr>`).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            document.getElementById('reportMainTitle').innerText = title;
+            document.getElementById('reportContentTableContainer').innerHTML = tableHTML;
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function printDailySignatures() {
+            switchTab('reports');
+            generateReport('signatures');
+        }
+    </script>
+</body>
+</html>
